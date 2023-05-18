@@ -23,6 +23,7 @@ public abstract class Contract
 
     public abstract double getMonthlyPayment();
 
+    // Make sure apr is already divided by 100 ... (4.25% would be apr = 0.0425)
     public static double calculateMonthlyPayment(double total, double apr, int numberOfMonths) {
         double monthlyInterest = apr / 12;
         return (total * monthlyInterest * Math.pow(1 + monthlyInterest, numberOfMonths)) / (Math.pow(1 + monthlyInterest, numberOfMonths) - 1);

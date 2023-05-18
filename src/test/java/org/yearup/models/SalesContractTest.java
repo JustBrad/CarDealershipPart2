@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SalesContractTest
 {
     @Test
-    public void getMonthlyPayment_should_return()
+    public void getMonthlyPayment_should_return_moreThan416_sinceOriginalPriceWas20000()
     {
         boolean inRange;
         Vehicle v = new Vehicle(12345, 2019, "honda", "civic", "coupe", "red", 10000, 20000);
@@ -21,6 +21,6 @@ class SalesContractTest
             inRange = false;
         }
 
-        assertTrue(inRange, "because 20,000 / 48 = 416.67, so with interest it should be between there and 550");
+        assertTrue(inRange, "because 20,000 / 48 = 416.67, so with interest it should be higher");
     }
 }
