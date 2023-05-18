@@ -2,10 +2,10 @@ package org.yearup.models;
 
 public class SalesContract extends Contract
 {
-    private static final double salesTax = 0.05;
     private static final double recordingFee = 100;
     private boolean isFinanced;
     private double originalPrice = super.getVehicleSold().getPrice();
+    private double salesTax = 0.05 * originalPrice;
     private double monthlyPayment;
 
     public SalesContract(String date, String customerName, String customerEmail, Vehicle vehicleSold,
