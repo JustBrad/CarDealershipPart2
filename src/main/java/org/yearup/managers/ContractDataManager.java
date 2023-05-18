@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.rmi.dgc.Lease;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -13,15 +14,26 @@ public class ContractDataManager
 {
     private String fileName;
     private FileWriter fileWriter = null;
+    private ArrayList<Contract> contractInventory = new ArrayList<>();
 
     public ContractDataManager(String fileName)
     {
         this.fileName = fileName;
+        loadContracts();
     }
 
-    public ArrayList<Contract> loadContracts()
+    public void addContract(Contract contract)
     {
-        ArrayList<Contract> contracts = new ArrayList<>();
+        contractInventory.add(contract);
+    }
+
+    public ArrayList<Contract> getContractInventory()
+    {
+        return contractInventory;
+    }
+
+    public void loadContracts()
+    {
         FileInputStream fileStream = null;
         Scanner scanner = null;
 
@@ -50,7 +62,7 @@ public class ContractDataManager
 
                     boolean isFinanced = Boolean.parseBoolean(columns[16]);
                     SalesContract salesContract = new SalesContract(columns[1], columns[2], columns[3], vehicle, isFinanced);
-                    contracts.add(salesContract);
+                    contractInventory.add(salesContract);
                 }
                 else if(columns[0].equalsIgnoreCase("LEASE"))
                 {
@@ -65,7 +77,7 @@ public class ContractDataManager
                     Vehicle vehicle = new Vehicle(vin, year, make, model, type, color, odometer, price);
 
                     LeaseContract leaseContract = new LeaseContract(columns[1], columns[2], columns[3], vehicle);
-                    contracts.add(leaseContract);
+                    contractInventory.add(leaseContract);
                 }
             }
         }
@@ -91,6 +103,91 @@ public class ContractDataManager
                 scanner.close();
             }
         }
-        return contracts;
+    }
+
+
+    public void saveContracts()
+    {
+        // Format decimals
+        DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+
+        try
+        {
+            // Create file writer
+            fileWriter = new FileWriter(fileName);
+
+            for(Contract contract : contractInventory)
+            {
+                if (contract instanceof SalesContract salesContract)
+                {
+                    String date = salesContract.getDate();
+                    String name = salesContract.getCustomerName();
+                    String email = salesContract.getCustomerEmail();
+                    int vin = salesContract.getVehicleSold().getVin();
+                    int year = salesContract.getVehicleSold().getYear();
+                    String make = salesContract.getVehicleSold().getMake();
+                    String model = salesContract.getVehicleSold().getModel();
+                    String type = salesContract.getVehicleSold().getVehicleType();
+                    String color = salesContract.getVehicleSold().getColor();
+                    int odometer = salesContract.getVehicleSold().getOdometer();
+                    double price = salesContract.getVehicleSold().getPrice();
+                    double salesTax = salesContract.getSalesTax();
+                    double recordingFee = salesContract.getRecordingFee();
+                    double processingFee = salesContract.getProcessingFee();
+                    double totalCost = salesContract.getTotalPrice();
+                    boolean isFinanced = salesContract.isFinanced();
+                    String yesNo;
+                    if (isFinanced)
+                        yesNo = "YES";
+                    else
+                        yesNo = "NO";
+                    double monthlyPayment = salesContract.getMonthlyPayment();
+
+                    fileWriter.write("SALE|" + date + "|" + name + "|" + email + "|" +
+                            vin + "|" + year + "|" + make + "|" + model + "|" + type + "|" + color + "|" + odometer + "|" + decimalFormat.format(price) + "|" +
+                            decimalFormat.format(salesTax) + "|" + decimalFormat.format(recordingFee) + "|" + decimalFormat.format(processingFee) + "|" + decimalFormat.format(totalCost) + "|" + yesNo + "|" + decimalFormat.format(monthlyPayment) + "\n");
+                } else if (contract instanceof LeaseContract leaseContract)
+                {
+                    String date = leaseContract.getDate();
+                    String name = leaseContract.getCustomerName();
+                    String email = leaseContract.getCustomerEmail();
+                    int vin = leaseContract.getVehicleSold().getVin();
+                    int year = leaseContract.getVehicleSold().getYear();
+                    String make = leaseContract.getVehicleSold().getMake();
+                    String model = leaseContract.getVehicleSold().getModel();
+                    String type = leaseContract.getVehicleSold().getVehicleType();
+                    String color = leaseContract.getVehicleSold().getColor();
+                    int odometer = leaseContract.getVehicleSold().getOdometer();
+                    double price = leaseContract.getVehicleSold().getPrice();
+                    double expectedEndingValue = leaseContract.getExpectedEndingValue();
+                    double leaseFee = leaseContract.getLeaseFee();
+                    double totalCost = leaseContract.getTotalPrice();
+                    double monthlyPayment = leaseContract.getMonthlyPayment();
+
+                    fileWriter.write("LEASE|" + date + "|" + name + "|" + email + "|" +
+                            vin + "|" + year + "|" + make + "|" + model + "|" + type + "|" + color + "|" + odometer + "|" + decimalFormat.format(price) + "|" +
+                            decimalFormat.format(expectedEndingValue) + "|" + decimalFormat.format(leaseFee) + "|" + decimalFormat.format(totalCost) + "|" + decimalFormat.format(monthlyPayment) + "\n");
+                }
+            }
+        }
+        catch(IOException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        finally
+        {
+            if(fileWriter != null)
+            {
+                try
+                {
+                    fileWriter.close();
+                }
+                catch(Exception e)
+                {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
     }
 }
+

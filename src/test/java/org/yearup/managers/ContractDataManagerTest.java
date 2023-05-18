@@ -13,7 +13,13 @@ class ContractDataManagerTest
     public void loadContracts_should_return_arrayListOfAllContracts()
     {
         ContractDataManager contractDataManager = new ContractDataManager("contracts.csv");
-        ArrayList<Contract> contracts = contractDataManager.loadContracts();
-        assertNotEquals(contracts, null, "because contracts arraylist should be loaded.");
+        assertNotEquals(contractDataManager.getContractInventory(), null, "because contracts arraylist should be loaded.");
+    }
+
+    @Test
+    public void saveContracts_should_overwriteAllContractsInFile()
+    {
+        ContractDataManager contractDataManager = new ContractDataManager("contracts.csv");
+        contractDataManager.saveContracts();
     }
 }

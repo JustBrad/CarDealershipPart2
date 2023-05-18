@@ -12,7 +12,7 @@ public class LeaseContract extends Contract
     @Override
     public double getTotalPrice()
     {
-        return originalPrice + getLeaseFee();
+        return (originalPrice - getExpectedEndingValue()) + getLeaseFee();
     }
 
     @Override

@@ -19,7 +19,7 @@ public class SalesContract extends Contract
     public double getTotalPrice()
     {
         // Original + sales tax on original + recording fee + processing fee
-        return originalPrice + (originalPrice * 0.05) + getRecordingFee() + getProcessingFee();
+        return originalPrice + salesTax + getRecordingFee() + getProcessingFee();
     }
 
     @Override
