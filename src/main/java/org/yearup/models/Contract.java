@@ -6,7 +6,6 @@ public abstract class Contract
     private String customerName;
     private String customerEmail;
     private Vehicle vehicleSold;
-    private double totalPrice;
     private double monthlyPayment;
 
     public Contract(String date, String customerName, String customerEmail, Vehicle vehicleSold)
@@ -19,11 +18,15 @@ public abstract class Contract
 
     public double getTotalPrice()
     {
-        totalPrice = vehicleSold.getPrice();
-        return totalPrice;
+        return vehicleSold.getPrice();
     }
 
     public abstract double getMonthlyPayment();
+
+    public static double calculateMonthlyPayment(double total, double apr, int numberOfMonths) {
+        double monthlyInterest = apr / 12;
+        return (total * monthlyInterest * Math.pow(1 + monthlyInterest, numberOfMonths)) / (Math.pow(1 + monthlyInterest, numberOfMonths) - 1);
+    }
 
     public String getDate()
     {
