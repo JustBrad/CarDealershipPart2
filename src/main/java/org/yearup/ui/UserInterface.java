@@ -3,9 +3,7 @@ package org.yearup.ui;
 import org.yearup.ColorCodes;
 import org.yearup.managers.ContractDataManager;
 import org.yearup.managers.DealershipFileManager;
-import org.yearup.models.Dealership;
-import org.yearup.models.SalesContract;
-import org.yearup.models.Vehicle;
+import org.yearup.models.*;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -249,6 +247,7 @@ public class UserInterface
                    printTitle("YOU SELECTED");
                    System.out.println("------------------------------------------------------------------------------------------------------");
                    printEntry(v);
+                   System.out.println();
                    break;
                } else
                {
@@ -314,9 +313,71 @@ public class UserInterface
             contractManager.addContract(salesContract);
             contractManager.saveContracts();
             dealership.remove(v);
+            fileManager.saveDealership(dealership);
             printGreenMessage(customerName + " BOUGHT THE " + v.getYear() + " " + v.getMake() + " " + v.getModel() + "!");
+
+            printContract(salesContract);
+        }
+        else
+        {
+            LeaseContract leaseContract = new LeaseContract(date, customerName, customerEmail, v);
+            contractManager.addContract(leaseContract);
+            contractManager.saveContracts();
+            dealership.remove(v);
+            fileManager.saveDealership(dealership);
+            printGreenMessage(customerName + " LEASED THE " + v.getYear() + " " + v.getMake() + " " + v.getModel() + "!");
+
+            printContract(leaseContract);
         }
     }
+
+    public void printContract(Contract contract)
+    {
+        if(contract instanceof SalesContract salesContract)
+        {
+            printTitle("SALES CONTRACT");
+            System.out.println("Type: SALE");
+            System.out.printf("Date: %s\n", salesContract.getDate());
+            System.out.printf("Name: %s\n", salesContract.getCustomerName());
+            System.out.printf("Email: %s\n", salesContract.getCustomerEmail());
+            System.out.printf("VIN: %d\n", salesContract.getVehicleSold().getVin());
+            System.out.printf("Year: %d\n", salesContract.getVehicleSold().getYear());
+            System.out.printf("Make: %s\n", salesContract.getVehicleSold().getMake());
+            System.out.printf("Model: %s\n", salesContract.getVehicleSold().getModel());
+            System.out.printf("Type: %s\n", salesContract.getVehicleSold().getVehicleType());
+            System.out.printf("Color: %s\n", salesContract.getVehicleSold().getColor());
+            System.out.printf("Odometer: %d\n", salesContract.getVehicleSold().getOdometer());
+            System.out.printf("Price: $ %.2f\n", salesContract.getVehicleSold().getPrice());
+            System.out.printf("Sales Tax: $ %.2f\n", salesContract.getSalesTax());
+            System.out.printf("Recording Fee: $ %.2f\n", salesContract.getRecordingFee());
+            System.out.printf("Processing Fee: $ %.2f\n", salesContract.getProcessingFee());
+            System.out.printf("Total Cost: $ %.2f\n", salesContract.getTotalPrice());
+            System.out.printf("Finance: %b\n", salesContract.isFinanced());
+            System.out.printf("Monthly Payment: $ %.2f\n", salesContract.getMonthlyPayment());
+
+        }
+        else if(contract instanceof LeaseContract leaseContract)
+        {
+            printTitle("LEASE CONTRACT");
+            System.out.println("Type: LEASE");
+            System.out.printf("Date: %s\n", leaseContract.getDate());
+            System.out.printf("Name: %s\n", leaseContract.getCustomerName());
+            System.out.printf("Email: %s\n", leaseContract.getCustomerEmail());
+            System.out.printf("VIN: %d\n", leaseContract.getVehicleSold().getVin());
+            System.out.printf("Year: %d\n", leaseContract.getVehicleSold().getYear());
+            System.out.printf("Make: %s\n", leaseContract.getVehicleSold().getMake());
+            System.out.printf("Model: %s\n", leaseContract.getVehicleSold().getModel());
+            System.out.printf("Type: %s\n", leaseContract.getVehicleSold().getVehicleType());
+            System.out.printf("Color: %s\n", leaseContract.getVehicleSold().getColor());
+            System.out.printf("Odometer: %d\n", leaseContract.getVehicleSold().getOdometer());
+            System.out.printf("Price: $ %.2f\n", leaseContract.getVehicleSold().getPrice());
+            System.out.printf("Ending Value: $ %.2f\n", leaseContract.getExpectedEndingValue());
+            System.out.printf("Lease Fee: $ %.2f\n", leaseContract.getLeaseFee());
+            System.out.printf("Total Cost: $ %.2f\n", leaseContract.getTotalPrice());
+            System.out.printf("Monthly Payment: $ %.2f\n", leaseContract.getMonthlyPayment());
+        }
+    }
+
 
     public void processGetByPriceRequest()
     {
