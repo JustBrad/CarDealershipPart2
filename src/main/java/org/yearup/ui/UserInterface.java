@@ -49,6 +49,7 @@ public class UserInterface
             System.out.println(ColorCodes.CYAN + "7) List All Vehicles");
             System.out.println(ColorCodes.GREEN + "8) Add a Vehicle");
             System.out.println(ColorCodes.RED + "9) Remove a Vehicle");
+            System.out.println(ColorCodes.ORANGE + "10) Buy/Lease a Vehicle");
             System.out.println(ColorCodes.PURPLE + "0) Exit" + ColorCodes.RESET);
             System.out.println();
 
@@ -107,6 +108,10 @@ public class UserInterface
                 case 9:
                     // Remove vehicle
                     processRemoveVehicleRequest();
+                    break;
+                case 10:
+                    // Buy/Lease vehicle
+                    processBuyLeaseRequest();
                     break;
             }
 
@@ -208,6 +213,50 @@ public class UserInterface
         else
         {
             printRedMessage("NO VEHICLES FOUND");
+        }
+    }
+
+    public void processBuyLeaseRequest()
+    {
+        // Display choices to user
+        processGetAllVehiclesRequest();
+        printTitle("BUY / LEASE A VEHICLE");
+        while(true)
+        {
+           try
+           {
+               System.out.print("Which vehicle are you interested in (VIN)? ");
+               int vin = Integer.parseInt(scanner.nextLine());
+               if (dealership.getVehicleByVin(vin) != null)
+               {
+                   Vehicle v = dealership.getVehicleByVin(vin);
+                   printTitle("YOU SELECTED");
+                   System.out.println("------------------------------------------------------------------------------------------------------");
+                   printEntry(v);
+                   break;
+               } else
+               {
+                   printRedMessage("VIN NOT FOUND");
+               }
+           }
+           catch(Exception e)
+           {
+               printInvalid();
+           }
+        }
+        while(true)
+        {
+            System.out.print("Enter BUY or LEASE: ");
+            String buyLease = scanner.nextLine();
+
+            if(buyLease.equalsIgnoreCase("BUY") || buyLease.equalsIgnoreCase("LEASE"))
+            {
+                break;
+            }
+            else
+            {
+                printInvalid();
+            }
         }
     }
 

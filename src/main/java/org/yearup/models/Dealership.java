@@ -36,6 +36,20 @@ public class Dealership
         return inventory;
     }
 
+    public Vehicle getVehicleByVin(int vin)
+    {
+        Vehicle vehicle;
+        for(Vehicle v : inventory)
+        {
+            if(v.getVin() == vin)
+            {
+                vehicle = v;
+                return vehicle;
+            }
+        }
+        return null;
+    }
+
     public ArrayList<Vehicle> getVehiclesByPrice(double min, double max)
     {
         ArrayList<Vehicle> vehicles = new ArrayList<>();
