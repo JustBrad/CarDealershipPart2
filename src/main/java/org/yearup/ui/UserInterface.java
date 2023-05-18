@@ -1,8 +1,10 @@
 package org.yearup.ui;
 
 import org.yearup.ColorCodes;
+import org.yearup.managers.ContractDataManager;
 import org.yearup.managers.DealershipFileManager;
 import org.yearup.models.Dealership;
+import org.yearup.models.SalesContract;
 import org.yearup.models.Vehicle;
 
 import java.awt.*;
@@ -14,6 +16,7 @@ public class UserInterface
     // Variables
     private Dealership dealership;
     DealershipFileManager fileManager;
+    ContractDataManager contractManager = new ContractDataManager("contracts.csv");
     private static Scanner scanner = new Scanner(System.in);
 
     // Constructor
@@ -218,18 +221,31 @@ public class UserInterface
 
     public void processBuyLeaseRequest()
     {
+        // SALE / LEASE
+        String buyLease = "";
+        Vehicle v;
+
         // Display choices to user
         processGetAllVehiclesRequest();
         printTitle("BUY / LEASE A VEHICLE");
+
+        // Get DATE
+        System.out.print("Enter a date: ");
+        String date = scanner.nextLine().strip();
+
+        // Get VIN
         while(true)
         {
            try
            {
                System.out.print("Which vehicle are you interested in (VIN)? ");
-               int vin = Integer.parseInt(scanner.nextLine());
+               int vin = Integer.parseInt(scanner.nextLine().strip());
+
+               // Make sure VIN is in dealership
                if (dealership.getVehicleByVin(vin) != null)
                {
-                   Vehicle v = dealership.getVehicleByVin(vin);
+                   // Display selection
+                   v = dealership.getVehicleByVin(vin);
                    printTitle("YOU SELECTED");
                    System.out.println("------------------------------------------------------------------------------------------------------");
                    printEntry(v);
@@ -244,10 +260,19 @@ public class UserInterface
                printInvalid();
            }
         }
+
+        // Get NAME & EMAIL
+        System.out.print("Enter customer name: ");
+        String customerName = scanner.nextLine().toUpperCase().strip();
+        System.out.print("Enter customer email: ");
+        String customerEmail = scanner.nextLine().toUpperCase().strip();
+
+
+        // Get BUY / LEASE
         while(true)
         {
             System.out.print("Enter BUY or LEASE: ");
-            String buyLease = scanner.nextLine();
+            buyLease = scanner.nextLine().toUpperCase().strip();
 
             if(buyLease.equalsIgnoreCase("BUY") || buyLease.equalsIgnoreCase("LEASE"))
             {
@@ -257,6 +282,39 @@ public class UserInterface
             {
                 printInvalid();
             }
+        }
+
+        // Handle SALE
+        if(buyLease.equalsIgnoreCase("BUY"))
+        {
+            // Get isFinanced
+            boolean isFinanced;
+
+            while(true)
+            {
+                System.out.print("Are you financing this vehicle? (Y/N) ");
+                String finance = scanner.nextLine().toUpperCase().strip();
+                switch(finance)
+                {
+                    case "Y":
+                        isFinanced = true;
+                        break;
+                    case"N":
+                        isFinanced = false;
+                        break;
+                    default:
+                        printInvalid();
+                        continue;
+                }
+                break;
+            }
+
+
+            SalesContract salesContract = new SalesContract(date, customerName, customerEmail, v, isFinanced);
+            contractManager.addContract(salesContract);
+            contractManager.saveContracts();
+            dealership.remove(v);
+            printGreenMessage(customerName + " BOUGHT THE " + v.getYear() + " " + v.getMake() + " " + v.getModel() + "!");
         }
     }
 
