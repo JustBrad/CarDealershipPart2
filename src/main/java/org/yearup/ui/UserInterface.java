@@ -259,7 +259,7 @@ public class UserInterface
         }
 
         // Get NAME & EMAIL
-        System.out.print("Enter customer name: ");
+        System.out.print("Enter full customer name: ");
         String customerName = scanner.nextLine().toUpperCase().strip();
         System.out.print("Enter customer email: ");
         String customerEmail = scanner.nextLine().toUpperCase().strip();
@@ -274,6 +274,29 @@ public class UserInterface
             // Make sure input is ONLY BUY or LEASE
             if(buyLease.equalsIgnoreCase("BUY") || buyLease.equalsIgnoreCase("LEASE"))
             {
+                // Cannot LEASE vehicle over 3 years old
+                if(v.getYear() < 2020 && buyLease.equalsIgnoreCase("LEASE"))
+                {
+                    printRedMessage("YOU CANNOT LEASE A VEHICLE OVER 3 YEARS OLD");
+                    while(true)
+                    {
+                        // Option to cancel transaction
+                        System.out.print("Would you like to cancel? (Y/N) ");
+                        String cancel = scanner.nextLine().toUpperCase().strip();
+                        if(cancel.equalsIgnoreCase("Y"))
+                        {
+                            return;
+                        }
+                        else if(cancel.equalsIgnoreCase("N"))
+                        {
+                            // Ask for BUY/LEASE again
+                            break;
+                        }
+                    }
+                    continue;
+
+                }
+                // Done getting BUY/LEASE
                 break;
             }
             else
@@ -313,8 +336,14 @@ public class UserInterface
             dealership.getContractDataManager().saveContracts(dealership.getContractInventory());
             dealership.remove(v);
             fileManager.saveDealership(dealership);
-            printGreenMessage(customerName + " BOUGHT THE " + v.getYear() + " " + v.getMake() + " " + v.getModel() + "!");
-
+            if(!isFinanced)
+            {
+                printGreenMessage(customerName + " BOUGHT THE " + v.getYear() + " " + v.getMake() + " " + v.getModel() + "!");
+            }
+            else
+            {
+                printGreenMessage(customerName + " FINANCED THE " + v.getYear() + " " + v.getMake() + " " + v.getModel() + "!");
+            }
             printContract(salesContract);
         }
         else
