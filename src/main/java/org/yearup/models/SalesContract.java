@@ -27,11 +27,7 @@ public class SalesContract extends Contract
     @Override
     public double getMonthlyPayment()
     {
-        if(!isFinanced)
-        {
-            return 0;
-        }
-        else
+        if(isFinanced)
         {
             // if getTotalPrice >= $10,000 then 4.25% for 48 months
             if(getTotalPrice() >= 10000)
@@ -48,6 +44,8 @@ public class SalesContract extends Contract
                 return calculateMonthlyPayment(getTotalPrice(), apr, numberOfMonths);
             }
         }
+
+        return 0;
     }
 
     public double getProcessingFee()

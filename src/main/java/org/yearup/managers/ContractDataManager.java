@@ -128,16 +128,11 @@ public class ContractDataManager
                     double processingFee = salesContract.getProcessingFee();
                     double totalCost = salesContract.getTotalPrice();
                     boolean isFinanced = salesContract.isFinanced();
-                    String yesNo;
-                    if (isFinanced)
-                        yesNo = "YES";
-                    else
-                        yesNo = "NO";
                     double monthlyPayment = salesContract.getMonthlyPayment();
 
                     fileWriter.write("SALE|" + date + "|" + name + "|" + email + "|" +
                             vin + "|" + year + "|" + make + "|" + model + "|" + type + "|" + color + "|" + odometer + "|" + decimalFormat.format(price) + "|" +
-                            decimalFormat.format(salesTax) + "|" + decimalFormat.format(recordingFee) + "|" + decimalFormat.format(processingFee) + "|" + decimalFormat.format(totalCost) + "|" + yesNo + "|" + decimalFormat.format(monthlyPayment) + "\n");
+                            decimalFormat.format(salesTax) + "|" + decimalFormat.format(recordingFee) + "|" + decimalFormat.format(processingFee) + "|" + decimalFormat.format(totalCost) + "|" + isFinanced + "|" + decimalFormat.format(monthlyPayment) + "\n");
                 } else if (contract instanceof LeaseContract leaseContract)
                 {
                     String date = leaseContract.getDate();

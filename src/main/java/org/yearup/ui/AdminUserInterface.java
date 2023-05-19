@@ -26,6 +26,7 @@ public class AdminUserInterface extends UserInterface
             System.out.println(ColorCodes.YELLOW + "1) List All Contracts");
             System.out.println(ColorCodes.YELLOW + "2) List All Sales Contracts");
             System.out.println(ColorCodes.YELLOW + "3) List All Lease Contracts");
+            System.out.println(ColorCodes.ORANGE + "4) View Contract Details");
             System.out.println(ColorCodes.PURPLE + "0) Back" + ColorCodes.RESET);
             System.out.println();
 
@@ -65,6 +66,11 @@ public class AdminUserInterface extends UserInterface
                     // Display All Lease Contracts
                     displayAllLeaseContracts();
                 }
+                case 4 ->
+                {
+                    // View Contract Details
+                    viewContractDetails();
+                }
                 default ->
                 {
                     printInvalid();
@@ -76,21 +82,46 @@ public class AdminUserInterface extends UserInterface
     @Override
     public void printLabels()
     {
-        System.out.println(ColorCodes.BLACK_BACKGROUND + " TYPE   DATE         NAME                 EMAIL                VIN        YEAR       MAKE            MODEL                    TOTAL  " + ColorCodes.RESET);
-        System.out.println("-------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println(ColorCodes.BLACK_BACKGROUND + " TYPE   DATE         NAME                 EMAIL                VIN        YEAR       MAKE            MODEL                    TOTAL        MONTHLY " + ColorCodes.RESET);
+        System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------");
     }
 
-    public void printEntry(Contract c)
+    public void printEntry(Contract contract)
     {
-        if(c.getType().equalsIgnoreCase("SALE"))
+        if(contract instanceof SalesContract c)
         {
-            System.out.printf(ColorCodes.YELLOW + "%-7s %-12s %-20s %-20s %-10d %-10d %-15s %-20s $ %9.2f" + ColorCodes.RESET + "\n", c.getType(), c.getDate(), c.getCustomerName(), c.getCustomerEmail(), c.getVehicleSold().getVin(), c.getVehicleSold().getYear(), c.getVehicleSold().getMake(), c.getVehicleSold().getModel(), c.getTotalPrice());
+            System.out.printf(ColorCodes.YELLOW + "%-7s %-12s %-20s %-20s %-10d %-10d %-15s %-20s $ %9.2f     $ %7.2f" + ColorCodes.RESET + "\n", c.getType(), c.getDate(), c.getCustomerName(), c.getCustomerEmail(), c.getVehicleSold().getVin(), c.getVehicleSold().getYear(), c.getVehicleSold().getMake(), c.getVehicleSold().getModel(), c.getTotalPrice(), c.getMonthlyPayment());
         }
-        else
+        else if(contract instanceof LeaseContract c)
         {
-            System.out.printf(ColorCodes.CYAN + "%-7s %-12s %-20s %-20s %-10d %-10d %-15s %-20s $ %9.2f" + ColorCodes.RESET + "\n", c.getType(), c.getDate(), c.getCustomerName(), c.getCustomerEmail(), c.getVehicleSold().getVin(), c.getVehicleSold().getYear(), c.getVehicleSold().getMake(), c.getVehicleSold().getModel(), c.getTotalPrice());
+            System.out.printf(ColorCodes.CYAN + "%-7s %-12s %-20s %-20s %-10d %-10d %-15s %-20s $ %9.2f     $ %7.2f" + ColorCodes.RESET + "\n", c.getType(), c.getDate(), c.getCustomerName(), c.getCustomerEmail(), c.getVehicleSold().getVin(), c.getVehicleSold().getYear(), c.getVehicleSold().getMake(), c.getVehicleSold().getModel(), c.getTotalPrice(), c.getMonthlyPayment());
         }
-        System.out.println("-------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------");
+    }
+
+    public void viewContractDetails()
+    {
+        // Display list so user can choose
+        displayAllContracts();
+
+        printTitle("VIEW CONTRACT DETAILS");
+        System.out.print("Enter the customer's name: ");
+        String name = scanner.nextLine().toUpperCase().strip();
+        int count = 0;
+
+        for(Contract contract : contractInventory)
+        {
+            if(contract.getCustomerName().equalsIgnoreCase(name))
+            {
+                printContract(contract);
+                count++;
+            }
+        }
+
+        if(count == 0)
+        {
+            printRedMessage("CUSTOMER NOT FOUND");
+        }
     }
 
     public void displayAllContracts()
