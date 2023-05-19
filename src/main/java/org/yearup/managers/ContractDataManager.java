@@ -14,7 +14,6 @@ public class ContractDataManager
 {
     private String fileName;
     private FileWriter fileWriter = null;
-    private ArrayList<Contract> contractInventory = new ArrayList<>();
 
     public ContractDataManager(String fileName)
     {
@@ -22,20 +21,12 @@ public class ContractDataManager
         loadContracts();
     }
 
-    public void addContract(Contract contract)
-    {
-        contractInventory.add(contract);
-    }
-
-    public ArrayList<Contract> getContractInventory()
-    {
-        return contractInventory;
-    }
-
-    public void loadContracts()
+    // Read through CSV and return ArrayList of contracts
+    public ArrayList<Contract> loadContracts()
     {
         FileInputStream fileStream = null;
         Scanner scanner = null;
+        ArrayList<Contract> listOfContracts = new ArrayList<>();
 
         try
         {
@@ -62,7 +53,7 @@ public class ContractDataManager
 
                     boolean isFinanced = Boolean.parseBoolean(columns[16]);
                     SalesContract salesContract = new SalesContract(columns[1], columns[2], columns[3], vehicle, isFinanced);
-                    contractInventory.add(salesContract);
+                    listOfContracts.add(salesContract);
                 }
                 else if(columns[0].equalsIgnoreCase("LEASE"))
                 {
@@ -77,7 +68,7 @@ public class ContractDataManager
                     Vehicle vehicle = new Vehicle(vin, year, make, model, type, color, odometer, price);
 
                     LeaseContract leaseContract = new LeaseContract(columns[1], columns[2], columns[3], vehicle);
-                    contractInventory.add(leaseContract);
+                    listOfContracts.add(leaseContract);
                 }
             }
         }
@@ -103,10 +94,11 @@ public class ContractDataManager
                 scanner.close();
             }
         }
+        return listOfContracts;
     }
 
 
-    public void saveContracts()
+    public void saveContracts(ArrayList<Contract> contractsToSave)
     {
         // Format decimals
         DecimalFormat decimalFormat = new DecimalFormat("#0.00");
@@ -116,7 +108,7 @@ public class ContractDataManager
             // Create file writer
             fileWriter = new FileWriter(fileName);
 
-            for(Contract contract : contractInventory)
+            for(Contract contract : contractsToSave)
             {
                 if (contract instanceof SalesContract salesContract)
                 {

@@ -1,11 +1,9 @@
 package org.yearup.ui;
 
 import org.yearup.ColorCodes;
-import org.yearup.managers.ContractDataManager;
 import org.yearup.managers.DealershipFileManager;
 import org.yearup.models.*;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -14,7 +12,6 @@ public class UserInterface
     // Variables
     private Dealership dealership;
     DealershipFileManager fileManager;
-    ContractDataManager contractManager = new ContractDataManager("contracts.csv");
     private static Scanner scanner = new Scanner(System.in);
 
     // Constructor
@@ -228,7 +225,7 @@ public class UserInterface
         printTitle("BUY / LEASE A VEHICLE");
 
         // Get DATE
-        System.out.print("Enter a date: ");
+        System.out.print("Enter a date (YYYYMMDD): ");
         String date = scanner.nextLine().strip();
 
         // Get VIN
@@ -251,6 +248,7 @@ public class UserInterface
                    break;
                } else
                {
+                   // If VIN is NOT in dealership inventory
                    printRedMessage("VIN NOT FOUND");
                }
            }
@@ -273,6 +271,7 @@ public class UserInterface
             System.out.print("Enter BUY or LEASE: ");
             buyLease = scanner.nextLine().toUpperCase().strip();
 
+            // Make sure input is ONLY BUY or LEASE
             if(buyLease.equalsIgnoreCase("BUY") || buyLease.equalsIgnoreCase("LEASE"))
             {
                 break;
@@ -310,8 +309,8 @@ public class UserInterface
 
 
             SalesContract salesContract = new SalesContract(date, customerName, customerEmail, v, isFinanced);
-            contractManager.addContract(salesContract);
-            contractManager.saveContracts();
+            dealership.addContract(salesContract);
+            dealership.getContractDataManager().saveContracts(dealership.getContractInventory());
             dealership.remove(v);
             fileManager.saveDealership(dealership);
             printGreenMessage(customerName + " BOUGHT THE " + v.getYear() + " " + v.getMake() + " " + v.getModel() + "!");
@@ -321,8 +320,8 @@ public class UserInterface
         else
         {
             LeaseContract leaseContract = new LeaseContract(date, customerName, customerEmail, v);
-            contractManager.addContract(leaseContract);
-            contractManager.saveContracts();
+            dealership.addContract(leaseContract);
+            dealership.getContractDataManager().saveContracts(dealership.getContractInventory());
             dealership.remove(v);
             fileManager.saveDealership(dealership);
             printGreenMessage(customerName + " LEASED THE " + v.getYear() + " " + v.getMake() + " " + v.getModel() + "!");

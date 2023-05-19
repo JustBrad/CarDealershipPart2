@@ -13,13 +13,19 @@ class ContractDataManagerTest
     public void loadContracts_should_return_arrayListOfAllContracts()
     {
         ContractDataManager contractDataManager = new ContractDataManager("contracts.csv");
-        assertNotEquals(contractDataManager.getContractInventory(), null, "because contracts arraylist should be loaded.");
+        ArrayList<Contract> listOfContracts = contractDataManager.loadContracts();
+
+        String expectedName = "DANA WYATT";
+        String actualName = listOfContracts.get(0).getCustomerName();
+
+        assertEquals(expectedName, actualName, "because the first contract in the list belongs to DANA WYATT");
     }
 
     @Test
-    public void saveContracts_should_overwriteAllContractsInFile()
+    public void saveContracts_should_overwriteContractsFile_withSpecifiedListOfContracts()
     {
         ContractDataManager contractDataManager = new ContractDataManager("contracts.csv");
-        contractDataManager.saveContracts();
+        ArrayList<Contract> listOfContracts = contractDataManager.loadContracts();
+        contractDataManager.saveContracts(listOfContracts);
     }
 }

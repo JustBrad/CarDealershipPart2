@@ -1,5 +1,7 @@
 package org.yearup.models;
 
+import org.yearup.managers.ContractDataManager;
+
 import java.util.ArrayList;
 
 public class Dealership
@@ -9,6 +11,8 @@ public class Dealership
     private String address;
     private String phone;
     private ArrayList<Vehicle> inventory;
+    private ContractDataManager contractDataManager = new ContractDataManager("contracts.csv");
+    private ArrayList<Contract> contractInventory;
 
     // Constructors
     public Dealership(){}
@@ -19,6 +23,7 @@ public class Dealership
         this.address = address;
         this.phone = phone;
         inventory = new ArrayList<>();
+        contractInventory = contractDataManager.loadContracts();    // Preload contracts list
     }
 
     // Methods
@@ -31,6 +36,17 @@ public class Dealership
     {
         inventory.remove(vehicle);
     }
+
+    public void addContract(Contract contract)
+    {
+        contractInventory.add(contract);
+    }
+
+    public ArrayList<Contract> getContractInventory()
+    {
+        return contractInventory;
+    }
+
     public ArrayList<Vehicle> getAllVehicles()
     {
         return inventory;
@@ -129,6 +145,11 @@ public class Dealership
     }
 
     // Getters & setters
+    public ContractDataManager getContractDataManager()
+    {
+        return contractDataManager;
+    }
+
     public String getName()
     {
         return name;
