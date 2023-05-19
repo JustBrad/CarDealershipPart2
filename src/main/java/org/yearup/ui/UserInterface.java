@@ -14,6 +14,8 @@ public class UserInterface
     DealershipFileManager fileManager;
     private static Scanner scanner = new Scanner(System.in);
 
+    private AdminUserInterface adminUserInterface;
+
     // Constructor
     public UserInterface()
     {
@@ -48,6 +50,7 @@ public class UserInterface
             System.out.println(ColorCodes.GREEN + "8) Add a Vehicle");
             System.out.println(ColorCodes.RED + "9) Remove a Vehicle");
             System.out.println(ColorCodes.ORANGE + "10) Buy/Lease a Vehicle");
+            System.out.println(ColorCodes.PURPLE + "11) Admin Menu");
             System.out.println(ColorCodes.PURPLE + "0) Exit" + ColorCodes.RESET);
             System.out.println();
 
@@ -110,6 +113,10 @@ public class UserInterface
                 case 10:
                     // Buy/Lease vehicle
                     processBuyLeaseRequest();
+                    break;
+                case 11:
+                    // Admin menu
+                    askForAdminPassword();
                     break;
             }
 
@@ -406,6 +413,24 @@ public class UserInterface
         }
     }
 
+    // Admin menu
+    public void askForAdminPassword()
+    {
+        String password = "Password";
+        System.out.print("Enter password: ");
+        String input = scanner.nextLine();
+
+        if(input.equals(password))  // Case-sensitive
+        {
+            printGreenMessage("ACCESS GRANTED");
+            adminUserInterface = new AdminUserInterface();  // Initialize & display admin menu
+            adminUserInterface.displayAdminMenu();
+        }
+        else
+        {
+            printRedMessage("ACCESS DENIED");   // Back to main menu
+        }
+    }
 
     public void processGetByPriceRequest()
     {
