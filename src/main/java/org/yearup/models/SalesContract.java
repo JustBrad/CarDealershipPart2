@@ -7,12 +7,14 @@ public class SalesContract extends Contract
     private double originalPrice = super.getVehicleSold().getPrice();
     private double salesTax = 0.05 * originalPrice;
     private double monthlyPayment;
+    private String type;
 
     public SalesContract(String date, String customerName, String customerEmail, Vehicle vehicleSold,
                          boolean isFinanced)
     {
         super(date, customerName, customerEmail, vehicleSold);
         this.isFinanced = isFinanced;
+        this.type = "SALE";
     }
 
     @Override
@@ -74,5 +76,10 @@ public class SalesContract extends Contract
     public double getRecordingFee()
     {
         return recordingFee;
+    }
+
+    public String getType()
+    {
+        return type;
     }
 }

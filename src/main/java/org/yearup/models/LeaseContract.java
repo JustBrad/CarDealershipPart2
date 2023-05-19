@@ -3,10 +3,12 @@ package org.yearup.models;
 public class LeaseContract extends Contract
 {
     private double originalPrice = super.getVehicleSold().getPrice();
+    private String type;
 
     public LeaseContract(String date, String customerName, String customerEmail, Vehicle vehicleSold)
     {
         super(date, customerName, customerEmail, vehicleSold);
+        this.type = "LEASE";
     }
 
     @Override
@@ -29,5 +31,10 @@ public class LeaseContract extends Contract
     public double getLeaseFee()
     {
         return originalPrice * 0.07;
+    }
+
+    public String getType()
+    {
+        return type;
     }
 }

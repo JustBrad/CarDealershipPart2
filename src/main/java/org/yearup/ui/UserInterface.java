@@ -416,14 +416,14 @@ public class UserInterface
     // Admin menu
     public void askForAdminPassword()
     {
-        String password = "Password";
+        String password = "password";
         System.out.print("Enter password: ");
         String input = scanner.nextLine();
 
         if(input.equals(password))  // Case-sensitive
         {
             printGreenMessage("ACCESS GRANTED");
-            adminUserInterface = new AdminUserInterface();  // Initialize & display admin menu
+            adminUserInterface = new AdminUserInterface(dealership);  // Initialize & display admin menu
             adminUserInterface.displayAdminMenu();
         }
         else

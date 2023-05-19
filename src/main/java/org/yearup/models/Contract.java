@@ -7,6 +7,7 @@ public abstract class Contract
     private String customerEmail;
     private Vehicle vehicleSold;
     private double monthlyPayment;
+    private String type;
 
     public Contract(String date, String customerName, String customerEmail, Vehicle vehicleSold)
     {
@@ -47,5 +48,10 @@ public abstract class Contract
     public Vehicle getVehicleSold()
     {
         return vehicleSold;
+    }
+
+    public String getType()
+    {
+        return type;
     }
 }
