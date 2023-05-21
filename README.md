@@ -155,3 +155,10 @@ From the Admin Menu, you can choose to display All Contracts or just Sales/Lease
 ### All Lease Contracts
 
 ![All Lease Contracts](images/listLeaseContracts.png)
+
+### Viewing Contract Details
+Selecting **View Contract Details** will allow you to see all information for a specific contract.
+
+(Specified by customer name)
+
+![View Contract Details](images/viewContractDetails.png)
